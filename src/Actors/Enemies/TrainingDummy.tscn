@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://p3ebumikr1bm"]
+
+[ext_resource type="Script" uid="uid://e3s3dvuqq37f" path="res://src/Actors/Enemies/TrainingDummy.cs" id="1_0g50v"]
+[ext_resource type="Texture2D" uid="uid://dwwcx15lmeckd" path="res://icon.svg" id="1_lck71"]
+[ext_resource type="Script" uid="uid://bgb1jcwkk7yot" path="res://src/Combat/Hurtbox.cs" id="3_x7sqf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0g50v"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x7sqf"]
+size = Vector2(129, 131)
+
+[node name="TrainingDummy" type="CharacterBody2D"]
+script = ExtResource("1_0g50v")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_lck71")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_0g50v")
+
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("HealthOwner")]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("3_x7sqf")
+HealthOwner = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(-2.5, 1.5)
+shape = SubResource("RectangleShape2D_x7sqf")

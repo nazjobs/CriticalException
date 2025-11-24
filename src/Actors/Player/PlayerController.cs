@@ -16,20 +16,31 @@ public partial class PlayerController : CharacterBody2D
 	[Export] public double CoyoteTime = 0.1;
 	[Export] public double JumpBufferTime = 0.1;
 	[Export] public int MaxJumps = 2;
+	
+	[ExportCategory("Combat")]
+	[Export] public float AttackDuration = 0.2f;
+	private bool _isAttacking = false;
+	private Area2D _hitboxArea;
 
 	private double _coyoteTimer = 0;
 	private double _jumpBufferTimer = 0;
 	private int _jumpCount = 0;
+	
+	public override void _Ready()
+	{
+		// This looks for the node path: Player -> WeaponPivot -> MeleeHitbox
+		_hitboxArea = GetNode<Area2D>("WeaponPivot/MeleeHitbox");
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
 
-		// 1. UPDATE TIMERS
+		// --- TIMERS ---
 		if (_coyoteTimer > 0) _coyoteTimer -= delta;
 		if (_jumpBufferTimer > 0) _jumpBufferTimer -= delta;
 
-		// 2. GRAVITY & FLOOR LOGIC
+		// --- GRAVITY ---
 		if (!IsOnFloor())
 		{
 			velocity.Y += Gravity * (float)delta;
@@ -37,49 +48,71 @@ public partial class PlayerController : CharacterBody2D
 		else
 		{
 			_coyoteTimer = CoyoteTime;
-			_jumpCount = 0; // Reset jumps when touching ground
+			_jumpCount = 0;
 		}
 
-		// 3. BUFFER INPUT
-		if (Input.IsActionJustPressed("ui_accept"))
-		{
-			_jumpBufferTimer = JumpBufferTime;
-		}
+		// --- JUMP ---
+		if (Input.IsActionJustPressed("ui_accept")) _jumpBufferTimer = JumpBufferTime;
 
-		// 4. JUMP LOGIC
-		// Case A: Ground Jump (Normal)
 		if (_jumpBufferTimer > 0 && _coyoteTimer > 0)
 		{
 			velocity.Y = JumpVelocity;
 			_jumpBufferTimer = 0;
 			_coyoteTimer = 0;
-			_jumpCount = 1; // First jump used
+			_jumpCount = 1;
 		}
-		// Case B: Air Jump (Double Jump)
 		else if (Input.IsActionJustPressed("ui_accept") && _jumpCount < MaxJumps && _jumpCount > 0)
 		{
 			velocity.Y = DoubleJumpVelocity;
 			_jumpCount++;
 		}
 
-		// 5. VARIABLE JUMP HEIGHT
 		if (Input.IsActionJustReleased("ui_accept") && velocity.Y < 0)
 		{
 			velocity.Y *= JumpCutValue;
 		}
 
-		// 6. MOVEMENT
+		// --- MOVEMENT & WEAPON FACING ---
 		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+		
 		if (direction.X != 0)
 		{
 			velocity.X = Mathf.MoveToward(velocity.X, direction.X * Speed, Acceleration * (float)delta);
+			
+			// NEW CODE: Flip the WeaponPivot based on direction
+			// If moving right (1), scale is 1. If moving left (-1), scale is -1.
+			var pivot = GetNode<Node2D>("WeaponPivot");
+			pivot.Scale = new Vector2(direction.X > 0 ? 1 : -1, 1);
 		}
 		else
 		{
 			velocity.X = Mathf.MoveToward(velocity.X, 0, Friction * (float)delta);
 		}
+		
+		// --- ATTACK INPUT ---
+		if (Input.IsActionJustPressed("attack") && !_isAttacking)
+		{
+			PerformAttack();
+		}
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+	private async void PerformAttack()
+	{
+		_isAttacking = true;
+		
+		// 1. Enable the Hitbox CollisionShape
+		// This makes the "Sword" solid so it can hit the "Hurtbox"
+		var shape = _hitboxArea.GetNode<CollisionShape2D>("CollisionShape2D");
+		shape.Disabled = false;
+		
+		
+		// 2. Wait for 0.2 seconds (AttackDuration)
+		await ToSignal(GetTree().CreateTimer(AttackDuration), SceneTreeTimer.SignalName.Timeout);
+		
+		// 3. Disable the Hitbox again
+		shape.Disabled = true;
+		_isAttacking = false;
 	}
 }
