@@ -1,0 +1,44 @@
+[gd_scene load_steps=8 format=3 uid="uid://c5qxy7lm46wu3"]
+
+[ext_resource type="Script" uid="uid://b3qky14g34q24" path="res://src/Actors/Enemies/NullPointer.cs" id="1_pcl5u"]
+[ext_resource type="Texture2D" uid="uid://dwwcx15lmeckd" path="res://icon.svg" id="1_tp6cl"]
+[ext_resource type="Script" uid="uid://bgb1jcwkk7yot" path="res://src/Combat/Hurtbox.cs" id="2_pcl5u"]
+[ext_resource type="Script" uid="uid://bqc4goqnctq3m" path="res://src/Combat/Hitbox.cs" id="3_wohx3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kf1ov"]
+size = Vector2(124, 124)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nnoen"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yoytj"]
+
+[node name="NullPointer" type="CharacterBody2D"]
+script = ExtResource("1_pcl5u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0, 0.5267915, 0, 1)
+position = Vector2(-31.5, -31.5)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_tp6cl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-33, -32)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_kf1ov")
+
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("HealthOwner")]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_pcl5u")
+HealthOwner = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CircleShape2D_nnoen")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("3_wohx3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_yoytj")
