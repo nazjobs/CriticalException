@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvhn0skg8v83h"]
+
+[ext_resource type="Script" uid="uid://csa5xsewtrrno" path="res://src/Levels/Components/EndZone.cs" id="1_cil1m"]
+[ext_resource type="Texture2D" uid="uid://bwhrksu3oua06" path="res://assets/sprites/Props.png" id="2_ubhiy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ubhiy"]
+
+[node name="EndZone" type="Area2D"]
+script = ExtResource("1_cil1m")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ubhiy")
+region_enabled = true
+region_rect = Rect2(832, 447, 153, 162)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ubhiy")
