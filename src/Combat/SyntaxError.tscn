@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://cokh3d8e2kgmy"]
+
+[ext_resource type="Script" uid="uid://tnf3c5fo65w7" path="res://src/Combat/Projectile.cs" id="1_p2u7b"]
+[ext_resource type="Texture2D" uid="uid://dwwcx15lmeckd" path="res://icon.svg" id="2_7ayeq"]
+[ext_resource type="Script" uid="uid://bqc4goqnctq3m" path="res://src/Combat/Hitbox.cs" id="3_h7im2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_25w1g"]
+size = Vector2(6, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2mkwa"]
+size = Vector2(6, 6)
+
+[node name="SyntaxError" type="Area2D"]
+script = ExtResource("1_p2u7b")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("2_7ayeq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_25w1g")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+script = ExtResource("3_h7im2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_2mkwa")

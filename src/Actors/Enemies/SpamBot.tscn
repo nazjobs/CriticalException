@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://onbvdng01uwc"]
+
+[ext_resource type="Script" uid="uid://bpsj2bms5rx0a" path="res://src/Actors/Enemies/SpamBot.cs" id="1_3y0vv"]
+[ext_resource type="Texture2D" uid="uid://dwwcx15lmeckd" path="res://icon.svg" id="1_avty2"]
+[ext_resource type="PackedScene" uid="uid://do0fsedw7d0hb" path="res://src/Combat/SpamProjectile.tscn" id="2_d8n4o"]
+[ext_resource type="Script" uid="uid://bgb1jcwkk7yot" path="res://src/Combat/Hurtbox.cs" id="3_d8n4o"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_owydj"]
+size = Vector2(126.5, 125)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2cob6"]
+size = Vector2(154, 162)
+
+[node name="SpamBot" type="CharacterBody2D"]
+collision_layer = 4
+script = ExtResource("1_3y0vv")
+ProjectileScene = ExtResource("2_d8n4o")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0.3749751, 0.3574912, 1)
+position = Vector2(0, 1)
+texture = ExtResource("1_avty2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_owydj")
+
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("HealthOwner")]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("3_d8n4o")
+HealthOwner = NodePath("..")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_2cob6")
+
+[node name="Muzzle" type="Marker2D" parent="."]
+position = Vector2(98, 0)

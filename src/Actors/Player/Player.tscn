@@ -1,6 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://g67ae3se111r"]
+[gd_scene load_steps=16 format=3 uid="uid://g67ae3se111r"]
 
 [ext_resource type="Script" uid="uid://c7024o1fm3rcx" path="res://src/Actors/Player/PlayerController.cs" id="1_nef6d"]
+[ext_resource type="PackedScene" uid="uid://cokh3d8e2kgmy" path="res://src/Combat/SyntaxError.tscn" id="2_jdukh"]
 [ext_resource type="Script" uid="uid://bqc4goqnctq3m" path="res://src/Combat/Hitbox.cs" id="3_hqpi4"]
 [ext_resource type="Texture2D" uid="uid://cocb1630dhljh" path="res://assets/sprites/Player_Sheet.png" id="3_t3k2t"]
 [ext_resource type="Script" uid="uid://bgb1jcwkk7yot" path="res://src/Combat/Hurtbox.cs" id="4_t3k2t"]
@@ -122,8 +123,9 @@ _data = {
 &"Run": SubResource("Animation_jdukh")
 }
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_nef6d")
+ProjectileScene = ExtResource("2_jdukh")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_hqpi4")
@@ -139,6 +141,9 @@ script = ExtResource("3_hqpi4")
 position = Vector2(50, -11)
 shape = SubResource("RectangleShape2D_t3k2t")
 disabled = true
+
+[node name="Muzzle" type="Marker2D" parent="WeaponPivot"]
+position = Vector2(12, -13)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(1, -9)

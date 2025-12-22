@@ -33,9 +33,17 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 	private double _jumpBufferTimer = 0;
 	private int _jumpCount = 0;
 	private bool _isAttacking = false;
+	
+	//	--- Shooting Variables ---
+[Export] public PackedScene ProjectileScene; // Drag the bullet here
+[Export] public float FireRate = 0.5f;
+private bool _canShoot = true;
+private Marker2D _muzzle;
 
 	public override void _Ready()
 	{
+		_muzzle = GetNode<Marker2D>("WeaponPivot/Muzzle"); // Marker2D
+		
 		_currentHealth = MaxHealth;
 		// Grab references
 		_animPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
@@ -112,6 +120,12 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 
 		Velocity = velocity;
 		MoveAndSlide();
+		
+		// 
+		if (Input.IsActionPressed("fire") && _canShoot)
+		{
+			Shoot();
+		}
 	}
 
 	private void UpdateAnimations(Vector2 velocity)
@@ -147,6 +161,30 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 		
 		shape.Disabled = true;
 		_isAttacking = false;
+	}
+	
+	private void Shoot()
+	{
+		if (ProjectileScene == null) return;
+
+		_canShoot = false;
+		
+		// 1. Create Bullet
+		var bullet = ProjectileScene.Instantiate<Projectile>();
+		
+		// 2. Position it at the Muzzle
+		bullet.GlobalPosition = _muzzle.GlobalPosition;
+		
+		// 3. Set Direction based on where character is facing
+		// If Sprite is flipped (facing left), shoot left
+		Vector2 shootDir = _sprite.FlipH ? Vector2.Left : Vector2.Right;
+		bullet.Direction = shootDir;
+		
+		// 4. Add to the World (Not as a child of Player, otherwise it moves with him!)
+		GetTree().Root.AddChild(bullet);
+
+		// 5. Cooldown Timer
+		GetTree().CreateTimer(FireRate).Timeout += () => _canShoot = true;
 	}
 
 	public void TakeDamage(int amount, Vector2 knockback)
