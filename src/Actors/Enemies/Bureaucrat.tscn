@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://cygiclx36a3e4"]
+
+[ext_resource type="Script" uid="uid://i5huyo2oogwn" path="res://src/Actors/Enemies/Bureaucrat.cs" id="1_mtmkx"]
+[ext_resource type="Texture2D" uid="uid://dwwcx15lmeckd" path="res://icon.svg" id="2_q1qf2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0mjfb"]
+size = Vector2(123, 123)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mtmkx"]
+size = Vector2(157, 166)
+
+[node name="Bureaucrat" type="CharacterBody2D"]
+collision_layer = 32
+script = ExtResource("1_mtmkx")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.32172796, 0.32172796, 0.32172796, 1)
+texture = ExtResource("2_q1qf2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1.5, -0.5)
+shape = SubResource("RectangleShape2D_0mjfb")
+
+[node name="Repulsor" type="Area2D" parent="."]
+collision_mask = 9
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Repulsor"]
+position = Vector2(-1, 1)
+shape = SubResource("RectangleShape2D_mtmkx")

@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://g67ae3se111r"]
+[gd_scene load_steps=18 format=3 uid="uid://g67ae3se111r"]
 
 [ext_resource type="Script" uid="uid://c7024o1fm3rcx" path="res://src/Actors/Player/PlayerController.cs" id="1_nef6d"]
 [ext_resource type="PackedScene" uid="uid://cokh3d8e2kgmy" path="res://src/Combat/SyntaxError.tscn" id="2_jdukh"]
 [ext_resource type="Script" uid="uid://bqc4goqnctq3m" path="res://src/Combat/Hitbox.cs" id="3_hqpi4"]
 [ext_resource type="Texture2D" uid="uid://cocb1630dhljh" path="res://assets/sprites/Player_Sheet.png" id="3_t3k2t"]
 [ext_resource type="Script" uid="uid://bgb1jcwkk7yot" path="res://src/Combat/Hurtbox.cs" id="4_t3k2t"]
+[ext_resource type="Texture2D" uid="uid://cbibi0vw45df" path="res://assets/sprites/bomb_0002_Layer-8.png" id="6_13tsm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hqpi4"]
 
@@ -123,6 +124,8 @@ _data = {
 &"Run": SubResource("Animation_jdukh")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_tgemg"]
+
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_nef6d")
 ProjectileScene = ExtResource("2_jdukh")
@@ -168,3 +171,18 @@ zoom = Vector2(3, 3)
 libraries = {
 &"": SubResource("AnimationLibrary_jdukh")
 }
+
+[node name="ParadoxArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 53
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ParadoxArea"]
+scale = Vector2(5.8800006, 4.1999993)
+shape = SubResource("CircleShape2D_tgemg")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="ParadoxArea"]
+visible = false
+modulate = Color(1, 0, 1, 1)
+texture = ExtResource("6_13tsm")
+region_enabled = true

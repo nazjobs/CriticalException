@@ -35,13 +35,24 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 	private bool _isAttacking = false;
 	
 	//	--- Shooting Variables ---
-[Export] public PackedScene ProjectileScene; // Drag the bullet here
-[Export] public float FireRate = 0.5f;
-private bool _canShoot = true;
-private Marker2D _muzzle;
+	[Export] public PackedScene ProjectileScene; // Drag the bullet here
+	[Export] public float FireRate = 0.5f;
+	private bool _canShoot = true;
+	private Marker2D _muzzle;
+
+	//	--- Area Effect Ability ---
+	[ExportCategory("Abilities")]
+	[Export] public float ShoutCooldown = 3.0f;
+	private bool _canShout = true;
+	private Area2D _paradoxArea;
+	private Sprite2D _paradoxSprite;
 
 	public override void _Ready()
 	{
+		
+		_paradoxArea = GetNode<Area2D>("ParadoxArea");
+		_paradoxSprite = _paradoxArea.GetNode<Sprite2D>("Sprite2D");
+		
 		_muzzle = GetNode<Marker2D>("WeaponPivot/Muzzle"); // Marker2D
 		
 		_currentHealth = MaxHealth;
@@ -121,6 +132,11 @@ private Marker2D _muzzle;
 		Velocity = velocity;
 		MoveAndSlide();
 		
+		if (Input.IsActionJustPressed("shout") && _canShout)
+		{
+			PerformShout();
+		}
+		
 		// 
 		if (Input.IsActionPressed("fire") && _canShoot)
 		{
@@ -185,6 +201,45 @@ private Marker2D _muzzle;
 
 		// 5. Cooldown Timer
 		GetTree().CreateTimer(FireRate).Timeout += () => _canShoot = true;
+	}
+		private async void PerformShout()
+		{
+			_canShout = false;
+		GD.Print("OBJECTION!");
+		
+		// 1. Turn it on
+		_paradoxArea.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
+		_paradoxSprite.Visible = true;
+		
+		// --- ADD THIS LINE HERE ---
+		// Wait for the physics engine to catch up
+		await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+		// --------------------------
+
+		// 2. NOW Scan for enemies
+		var bodies = _paradoxArea.GetOverlappingBodies();
+		
+		GD.Print($"Shout hit {bodies.Count} bodies."); 
+
+		foreach (var body in bodies)
+		{
+			if (body is Bureaucrat b)
+			{
+				b.ApplyStun();
+			}
+		}
+		
+
+		// 3. Effect Duration (0.5s)
+		await ToSignal(GetTree().CreateTimer(0.5), SceneTreeTimer.SignalName.Timeout);
+		
+		// 4. Turn Off
+		_paradoxArea.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = true;
+		_paradoxSprite.Visible = false;
+
+		// 5. Cooldown
+		await ToSignal(GetTree().CreateTimer(ShoutCooldown), SceneTreeTimer.SignalName.Timeout);
+		_canShout = true;
 	}
 
 	public void TakeDamage(int amount, Vector2 knockback)
