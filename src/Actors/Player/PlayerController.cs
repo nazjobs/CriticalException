@@ -47,6 +47,15 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 	private Area2D _paradoxArea;
 	private Sprite2D _paradoxSprite;
 	
+	// --- AUDIO VARIABLES ---
+	private AudioStreamPlayer2D _sfxJump;   
+	private AudioStreamPlayer2D _sfxShoot;  
+	private AudioStreamPlayer2D _sfxHit;    
+	private AudioStreamPlayer2D _sfxDie;
+	private AudioStreamPlayer2D _sfxMelee;
+	private AudioStreamPlayer2D _sfxBoom;
+	
+	
 	[Export] public PackedScene GameOverScene;
 	
 	public event Action<int> OnHealthChanged; 
@@ -54,6 +63,15 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 
 	public override void _Ready()
 	{
+		
+		// We look inside the "AudioManager" folder we created in the scene
+		_sfxJump = GetNode<AudioStreamPlayer2D>("AudioManager/SFX_Jump");
+		_sfxShoot = GetNode<AudioStreamPlayer2D>("AudioManager/SFX_Shoot");
+		_sfxHit = GetNode<AudioStreamPlayer2D>("AudioManager/SFX_Hit");
+		_sfxDie = GetNode<AudioStreamPlayer2D>("AudioManager/SFX_Die");
+		_sfxMelee = GetNode<AudioStreamPlayer2D>("AudioManager/SFX_Melee");
+		_sfxBoom = GetNode<AudioStreamPlayer2D>("AudioManager/SFX_Boom");
+		
 		
 		_paradoxArea = GetNode<Area2D>("ParadoxArea");
 		_paradoxSprite = _paradoxArea.GetNode<Sprite2D>("Sprite2D");
@@ -94,6 +112,7 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 
 		if (_jumpBufferTimer > 0 && _coyoteTimer > 0)
 		{
+			_sfxJump.Play(); // <--- PLAY JUMP SOUND
 			velocity.Y = JumpVelocity;
 			_jumpBufferTimer = 0;
 			_coyoteTimer = 0;
@@ -176,6 +195,8 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 		var shape = _hitboxArea.GetNode<CollisionShape2D>("CollisionShape2D");
 		shape.Disabled = false;
 		
+		_sfxMelee.Play();
+		
 		// Optional: Play an "Attack" animation here if you make one
 		
 		await ToSignal(GetTree().CreateTimer(AttackDuration), SceneTreeTimer.SignalName.Timeout);
@@ -196,6 +217,8 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 		// 2. Position it at the Muzzle
 		bullet.GlobalPosition = _muzzle.GlobalPosition;
 		
+		_sfxShoot.Play();
+		
 		// 3. Set Direction based on where character is facing
 		// If Sprite is flipped (facing left), shoot left
 		Vector2 shootDir = _sprite.FlipH ? Vector2.Left : Vector2.Right;
@@ -212,6 +235,7 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 			_canShout = false;
 		GD.Print("OBJECTION!");
 		
+		_sfxBoom.Play();
 		// 1. Turn it on
 		_paradoxArea.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
 		_paradoxSprite.Visible = true;
@@ -249,6 +273,7 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 
 	public void TakeDamage(int amount, Vector2 knockback)
 	{
+		_sfxHit.Play();
 		_currentHealth -= amount;
 		
 		OnHealthChanged?.Invoke(_currentHealth);
@@ -263,6 +288,8 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 
 	private async void Die()
 	{
+		_sfxDie.Play();
+		
 		// 1. Stop Physics/Input
 		SetPhysicsProcess(false);
 		Velocity = Vector2.Zero;

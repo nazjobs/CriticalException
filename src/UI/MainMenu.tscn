@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bbjbom626khid"]
+[gd_scene load_steps=3 format=3 uid="uid://bbjbom626khid"]
 
 [ext_resource type="Script" uid="uid://che6t6wlmtf52" path="res://src/UI/MainMenu.cs" id="1_en4mt"]
+[ext_resource type="AudioStream" uid="uid://dq3mty476yca3" path="res://assets/audio/SFX/sfx_blip.ogg" id="2_yq4l5"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -49,3 +50,6 @@ text = "Start Debugging"
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
 text = "Shutdown"
+
+[node name="SFX_Blip" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_yq4l5")
