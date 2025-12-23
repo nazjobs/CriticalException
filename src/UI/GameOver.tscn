@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://df1ofqohk5ufm"]
+
+[ext_resource type="Script" uid="uid://tx3s7052xdcu" path="res://src/UI/GameOver.cs" id="1_5aewy"]
+
+[node name="GameOver" type="CanvasLayer"]
+script = ExtResource("1_5aewy")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.29058895, 1.504086e-07, 0.060413726, 1)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 220.0
+offset_top = 193.0
+offset_right = 929.0
+offset_bottom = 398.0
+theme_override_font_sizes/font_size = 150
+text = "EXPELLED"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 355.0
+offset_top = 456.0
+offset_right = 779.0
+offset_bottom = 551.0
+
+[node name="RetryButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Retake Semester"
+
+[node name="MenuButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Drop Out"

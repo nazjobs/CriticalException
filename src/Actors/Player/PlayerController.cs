@@ -46,6 +46,11 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 	private bool _canShout = true;
 	private Area2D _paradoxArea;
 	private Sprite2D _paradoxSprite;
+	
+	[Export] public PackedScene GameOverScene;
+	
+	public event Action<int> OnHealthChanged; 
+
 
 	public override void _Ready()
 	{
@@ -245,6 +250,9 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 	public void TakeDamage(int amount, Vector2 knockback)
 	{
 		_currentHealth -= amount;
+		
+		OnHealthChanged?.Invoke(_currentHealth);
+
 		Velocity = knockback;
 		
 		Modulate = Colors.Red;
@@ -255,19 +263,33 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 
 	private async void Die()
 	{
-		// 1. Stop all movement and input
-		// This prevents the player from running while dead
-		SetPhysicsProcess(false); 
+		// 1. Stop Physics/Input
+		SetPhysicsProcess(false);
 		Velocity = Vector2.Zero;
 
-		// 2. Play the Death Animation
+		// 2. Play Animation
 		GD.Print("Player Died");
 		_animPlayer.Play("Death");
 
-		// 3. Wait for the animation to finish (Length is 1.0s)
+		// 3. Wait for animation to finish
 		await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
 
-		// 4. Restart the Level
-		GetTree().ReloadCurrentScene();
+		// 4. SHOW GAME OVER SCREEN (New Logic)
+		if (GameOverScene != null)
+		{
+			// Instantiate the UI and add it to the Scene Root (so it covers everything)
+			var gameOver = GameOverScene.Instantiate();
+			GetTree().Root.AddChild(gameOver);
+			
+			// Optional: Pause the game behind the UI
+			// GetTree().Paused = true; 
+			// (Note: If you pause, make sure the GameOver buttons have Process Mode: Always)
+		}
+		else
+		{
+			// Fallback if you forgot to assign the scene
+			GD.Print("Error: GameOverScene not assigned in Player!");
+			GetTree().ReloadCurrentScene();
+		}
 	}
 }

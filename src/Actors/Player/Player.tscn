@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://bqc4goqnctq3m" path="res://src/Combat/Hitbox.cs" id="3_hqpi4"]
 [ext_resource type="Texture2D" uid="uid://cocb1630dhljh" path="res://assets/sprites/Player_Sheet.png" id="3_t3k2t"]
 [ext_resource type="Script" uid="uid://bgb1jcwkk7yot" path="res://src/Combat/Hurtbox.cs" id="4_t3k2t"]
-[ext_resource type="Texture2D" uid="uid://cbibi0vw45df" path="res://assets/sprites/bomb_0002_Layer-8.png" id="6_13tsm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/bomb_0002_Layer-8.png" id="6_13tsm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hqpi4"]
 

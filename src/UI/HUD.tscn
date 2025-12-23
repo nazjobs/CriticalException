@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://cv8w54od0ncag"]
+
+[ext_resource type="Script" uid="uid://dn01c4ilgllrc" path="res://src/UI/HUD.cs" id="1_5hfrm"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_5hfrm")
+
+[node name="GPABar" type="ProgressBar" parent="."]
+modulate = Color(0.37900856, 0.5726988, 1, 1)
+offset_left = 8.0
+offset_top = 9.0
+offset_right = 146.0
+offset_bottom = 47.0
+max_value = 4.0
+step = 1.0
+value = 4.0
+show_percentage = false

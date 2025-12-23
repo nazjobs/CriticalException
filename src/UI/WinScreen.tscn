@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://dx1crc24i4y4n"]
+
+[ext_resource type="Script" uid="uid://cgdgr2nrvf861" path="res://src/UI/WinScreen.cs" id="1_jvf8e"]
+
+[node name="WinScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jvf8e")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = -35.0
+offset_top = -25.0
+offset_right = 1203.0
+offset_bottom = 685.0
+color = Color(0.7717827, 0.62950253, 0.084960245, 1)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 155.0
+offset_top = 202.0
+offset_right = 1023.0
+offset_bottom = 339.0
+theme_override_font_sizes/font_size = 100
+text = "YOU GRADUATED!"
