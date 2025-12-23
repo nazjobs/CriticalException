@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://lww1tl5ccysu"]
+
+[ext_resource type="AudioStream" uid="uid://gas1ia1r1ovo" path="res://assets/audio/Music/Love.mp3" id="1_xd3t2"]
+
+[node name="MusicManager" type="AudioStreamPlayer"]
+stream = ExtResource("1_xd3t2")
+volume_db = -10.0
+autoplay = true
