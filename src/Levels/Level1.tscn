@@ -5329,7 +5329,7 @@ sources/4 = SubResource("TileSetAtlasSource_0lhff")
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
 self_modulate = Color(0.48570347, 0.48570353, 0.48570347, 1)
-position = Vector2(1817, 1552)
+position = Vector2(1818.0001, 1552)
 scale = Vector2(6.874927, 4.4199057)
 texture = ExtResource("1_fh32l")
 
@@ -5350,6 +5350,7 @@ shape = SubResource("WorldBoundaryShape2D_4ckwk")
 [node name="EndZone" parent="." instance=ExtResource("5_tts0k")]
 visible = false
 position = Vector2(2991, 793)
+NextLevelPath = "uid://vydhrv6b2l0w"
 
 [node name="NullPointer" parent="." instance=ExtResource("4_4ckwk")]
 position = Vector2(2338, 804.00006)
