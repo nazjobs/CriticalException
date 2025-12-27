@@ -53,6 +53,20 @@ public partial class Bureaucrat : CharacterBody2D
 		{
 			FlipDirection();
 		}
+		
+		// Walk Animation
+		
+		if (!_isStunned && Mathf.Abs(velocity.X) > 0)
+		{
+			// Play walk if moving
+			// (Assuming you named the AnimationPlayer "AnimationPlayer")
+			GetNode<AnimationPlayer>("AnimationPlayer").Play("Walk");
+		}
+		else
+		{
+			// Stop or play Idle
+			GetNode<AnimationPlayer>("AnimationPlayer").Stop();
+		}
 	}
 
 	private void FlipDirection()

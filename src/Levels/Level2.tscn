@@ -1,5 +1,6 @@
-[gd_scene load_steps=13 format=4 uid="uid://vydhrv6b2l0w"]
+[gd_scene load_steps=14 format=4 uid="uid://vydhrv6b2l0w"]
 
+[ext_resource type="Texture2D" uid="uid://cl5d40srja2nn" path="res://assets/sprites/Library Wallpaper.png" id="1_6vqpe"]
 [ext_resource type="PackedScene" uid="uid://cv8w54od0ncag" path="res://src/UI/HUD.tscn" id="1_kqfhv"]
 [ext_resource type="Texture2D" uid="uid://s1iikxpgfqm4" path="res://assets/sprites/Tileset_Ground.png" id="1_mb1r5"]
 [ext_resource type="Texture2D" uid="uid://bwhrksu3oua06" path="res://assets/sprites/Props.png" id="2_1ji4w"]
@@ -2674,6 +2675,17 @@ sources/3 = SubResource("TileSetAtlasSource_iqgwm")
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_tx5np"]
 
 [node name="Level2" type="Node2D"]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.1, 0.1)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(121, 24)
+rotation = 1.5707964
+scale = Vector2(2, 2)
+texture = ExtResource("1_6vqpe")
 
 [node name="HUD" parent="." instance=ExtResource("1_kqfhv")]
 

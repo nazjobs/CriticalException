@@ -4,6 +4,7 @@ using System;
 public partial class RegistrarManager : Node2D
 {
 	[Export] public float TimeLimit = 60.0f;
+	[Export] public Label TimerLabel; 
 	private double _timeLeft;
 	private bool _isActive = true;
 	private PlayerController _player;
@@ -20,6 +21,18 @@ public partial class RegistrarManager : Node2D
 		if (!_isActive) return;
 
 		_timeLeft -= delta;
+		
+		// --- UPDATE TIMER ---
+		if (TimerLabel != null)
+		{
+			// Format: "TIME: 59" (No decimals needed for bureaucracy)
+			TimerLabel.Text = $"TIME: {Mathf.CeilToInt(_timeLeft)}";
+			
+			// Optional: Make it red when low
+			if (_timeLeft < 10) TimerLabel.Modulate = Colors.Red;
+			else TimerLabel.Modulate = Colors.White;
+		}
+		// -----------------
 
 		// Simple Debug UI in Console
 		// (We will make a real UI bar in the next phase)

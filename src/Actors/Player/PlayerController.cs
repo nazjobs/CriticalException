@@ -197,7 +197,17 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 		
 		_sfxMelee.Play();
 		
-		// Optional: Play an "Attack" animation here if you make one
+		// 1. Play the Animation (Visuals + Physics if you keyed the collision)
+		_animPlayer.Play("Attack");
+
+		// 2. Wait for it to finish
+		// We use the length of the animation to determine how long to wait
+		await ToSignal(GetTree().CreateTimer(0.3), SceneTreeTimer.SignalName.Timeout);
+		
+		// 3. Reset
+		_isAttacking = false;
+		// If you didn't keyframe the collision shape in the animation, disable it here manually:
+		// _hitboxArea.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = true; 
 		
 		await ToSignal(GetTree().CreateTimer(AttackDuration), SceneTreeTimer.SignalName.Timeout);
 		
@@ -231,42 +241,40 @@ public partial class PlayerController : CharacterBody2D, IDamageable
 		GetTree().CreateTimer(FireRate).Timeout += () => _canShoot = true;
 	}
 		private async void PerformShout()
-		{
-			_canShout = false;
+	{
+		_canShout = false;
 		GD.Print("OBJECTION!");
 		
-		_sfxBoom.Play();
-		// 1. Turn it on
+		// 1. Enable Physics
 		_paradoxArea.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
 		_paradoxSprite.Visible = true;
 		
-		// --- ADD THIS LINE HERE ---
-		// Wait for the physics engine to catch up
+		// 2. Play the Pulse Animation
+		// We get the AnimationPlayer strictly inside the ParadoxArea
+		_paradoxArea.GetNode<AnimationPlayer>("AnimationPlayer").Play("Pulse");
+
+		// 3. Wait for physics to catch up (The fix we did earlier)
 		await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
-		// --------------------------
-
-		// 2. NOW Scan for enemies
-		var bodies = _paradoxArea.GetOverlappingBodies();
 		
-		GD.Print($"Shout hit {bodies.Count} bodies."); 
-
+		// 4. Scan logic (Existing code...)
+		var bodies = _paradoxArea.GetOverlappingBodies();
 		foreach (var body in bodies)
 		{
-			if (body is Bureaucrat b)
-			{
-				b.ApplyStun();
-			}
+			if (body is Bureaucrat b) b.ApplyStun();
 		}
-		
 
-		// 3. Effect Duration (0.5s)
+		// 5. Wait for animation to finish (0.5s)
 		await ToSignal(GetTree().CreateTimer(0.5), SceneTreeTimer.SignalName.Timeout);
 		
-		// 4. Turn Off
+		// 6. Disable Physics & Reset Visuals
 		_paradoxArea.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = true;
-		_paradoxSprite.Visible = false;
+		_paradoxSprite.Visible = false; // Hide it again
+		
+		// Reset scale/alpha for next time (optional if animation resets it at start)
+		_paradoxSprite.Scale = new Vector2(1, 1); 
+		_paradoxSprite.Modulate = new Color(1, 1, 1, 1);
 
-		// 5. Cooldown
+		// 7. Cooldown
 		await ToSignal(GetTree().CreateTimer(ShoutCooldown), SceneTreeTimer.SignalName.Timeout);
 		_canShout = true;
 	}

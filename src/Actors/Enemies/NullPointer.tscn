@@ -30,12 +30,14 @@ scale = Vector2(0.5, 0.5)
 shape = SubResource("RectangleShape2D_kf1ov")
 
 [node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("HealthOwner")]
-collision_layer = 2
+collision_layer = 18
 collision_mask = 0
 script = ExtResource("2_pcl5u")
 HealthOwner = NodePath("..")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(-33, -32)
+scale = Vector2(-2.676199, 2.9521823)
 shape = SubResource("CircleShape2D_nnoen")
 
 [node name="Hitbox" type="Area2D" parent="."]
@@ -44,4 +46,6 @@ collision_mask = 2
 script = ExtResource("3_wohx3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(-33, -32)
+scale = Vector2(3.34807, 3.2928936)
 shape = SubResource("CircleShape2D_yoytj")
